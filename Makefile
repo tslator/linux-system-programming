@@ -1,19 +1,19 @@
 CC=gcc
 CFLAGS=-Wall -Wextra -g
 
-SRC=src/main.c
+SRCS=$(wildcard src/*.c)
 OUT=bin/app
 
 all: $(OUT)
 
-$(OUT): $(SRC) | bin
-	$(CC) $(CFLAGS) -o $(OUT) $(SRC)
+$(OUT): $(SRCS) | bin
+	@$(CC) $(CFLAGS) -o $(OUT) $(SRCS)
 
 bin:
-	mkdir -p bin
+	@mkdir -p bin
 
 clean:
-	rm -rf bin
+	@rm -rf bin
 
 run: all
-	./bin/app
+	@./bin/app
