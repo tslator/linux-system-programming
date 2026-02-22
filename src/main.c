@@ -33,9 +33,10 @@ void do_open_system_call()
 
 void do_open_permissions_system_call()
 {
-  remove_file("test.txt");
+  char *filename = {"test.txt"};
+  remove_file(filename);
 
-  char *filename = create_file("test.txt", (Context){.permissions = O_CREAT | O_RDWR, .mode = 0644});
+  filename = create_file(filename, (Context){.permissions = O_CREAT, .mode = 0666});
   if (filename == NULL) 
   {
     printf("Failed to create the readwrite file.\n");
@@ -43,11 +44,10 @@ void do_open_permissions_system_call()
   }
 
   printf("Testing with existing read-write file as read-only: %s\n", filename);
-  open_with_context(filename, (Context){.permissions = O_RDONLY, .mode = 0444});
-
+  open_with_context(filename, (Context){.permissions = O_CREAT | O_RDONLY, .mode = 0444});
   remove_file(filename);
 
-  filename = create_file("test.txt", (Context){.permissions = O_CREAT | O_WRONLY, .mode = 0222});
+  filename = create_file(filename, (Context){.permissions = O_CREAT, .mode = 0222});
   if (filename == NULL) 
   {
     printf("Failed to create the writeonly file.\n");
@@ -55,8 +55,7 @@ void do_open_permissions_system_call()
   }
 
   printf("Testing with existing write-only file as read-only: %s\n", filename);
-  open_with_context(filename, (Context){.permissions = O_RDONLY, .mode = 0444});
-
+  open_with_context(filename, (Context){.permissions = O_RDONLY, .mode = 0});
   remove_file(filename);
 }
 
